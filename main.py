@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from prompts import system_prompt
 load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
 if api_key == None:
@@ -15,7 +16,7 @@ args = parser.parse_args()
 from google.genai import types
 messages = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
 client = genai.Client(api_key=api_key)
-response = client.models.generate_content(model="gemini-2.5-flash", contents=messages)
+response = client.models.generate_content(model="gemini-2.5-flash", contents=messages, config=types.GenerateContentConfig(system_instruction=system_prompt))
 prompt_token_count = response.usage_metadata.prompt_token_count
 candidates_token_count = response.usage_metadata.candidates_token_count
 
